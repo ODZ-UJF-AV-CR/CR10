@@ -42,37 +42,41 @@ df2['H'] = df2['H'].astype(float)
 df2['HH'] = df2['HH'].astype(float) * 3 + 20
 
 df2['lat'] = df2['lat'] / 20 - 10
-df2['alt'] = df2['alt'] / 3048 - 20
+df2['alt'] = df2['alt'] / 3048 - 20 # feets to meters plus some shift
 
 datetime.timedelta(days=1)
 from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
 to_time = str(pd.to_datetime(FD) + datetime.timedelta(days=days_view))
 
-df2[from_time: to_time].plot(figsize=(12,7),lw='1') 
+df2[from_time: to_time].plot(figsize=(12,8),lw='1') 
+#df2[from_time: to_time]['lat'].plot(figsize=(12,8),lw='1', label='latitude') 
 df3[from_time: to_time]['FD'] = df3[from_time: to_time]['FD'].sub(90) # normalize FD data
-df3[from_time: to_time]['FD'].plot(figsize=(12,7),lw='1', label='FD LS') 
-plt.title('FD ' + FD)  
+df3[from_time: to_time]['FD'].plot(figsize=(12,8),lw='1', label='NM LS') 
+plt.title(FD)  
 
-plt.axvline(x=pd.to_datetime(FD), color='grey', ls='--') # plot dashed vertical line in tne FD time
+plt.axvline(x=pd.to_datetime(FD), color='grey', ls='--') # plot dashed vertical line at the FD time
 
 
 plt.savefig('./ble.png')
 
 # HTML code
-print "Content-type:text/html\r\n\r\n"
-print "<html>"
-print "<head>"
-print "<title>Graph</title>"
-print "</head>"
-print "<body>"
-#print "<h2>from %s to %s</h2>" % (FD, days)
+print 'Content-type:text/html\r\n\r\n'
+print '<html>'
+print '<head>'
+print '<title>CR10</title>'
+print '<link rel="stylesheet" type="text/css" href="../style/aircraft.css">'
+print '</head>'
+print '<body>'
+
+print "<h1>CR10 database</h1>"
 print '<form action="/cgi-bin/cr10.py" method="get">'
-print 'FD: <input type="text" name="FD" value=%s>  &nbsp; &nbsp; Days+-: <input type="text" name="days" value=%s />' % (FD, days)
+print 'Day: <input type="text" name="FD" value=%s>  &nbsp; &nbsp; Window +-: <input type="text" name="days" value=%s /> days &nbsp; &nbsp; ' % (FD, days)
 print '<input type="submit" value="Submit" />'
 print '</form>'
 
 print '<img src="../ble.png">'
+print '<p>When using these data, please read this <a href="../licence.html">info</a>.</p>'
 
-print "</body>"
-print "</html>"
+print '</body>'
+print '</html>'
 

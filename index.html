@@ -1,16 +1,17 @@
 <html>
 <head>
-<title> FD </title>
+<title>CR10</title>
+<script language="javascript">
+<!--
+function runcgi()
+{
+window.location.href='/cgi-bin/cr10.py?FD=2001-4-15&days=20';
+}
+// -->
+</script>
+</head>
+
 <body>
-
-<form action="/cgi-bin/cr10.py" method="get">
-FD: <input type="text" name="FD" value="2005-8-1">  &nbsp; &nbsp; Days+-: <input type="text" name="days" value="20" />
-<input type="submit" value="Submit" />
-</form>
-
-<img src="ble.png">
-
-
-
-</body>
+<script type="text/javascript" language="javascript"> onload = runcgi()</script>
+</body> 
 </html>
