@@ -42,7 +42,7 @@ df2 = pd.read_csv('~aircraft/public_html/CR10/data/radiation_avg.csv', sep=',', 
 df2['date'] = pd.to_datetime(df2['date'])
 df2 = df2.set_index('date')
 df2['DSi'] = df2['DSi'].astype(float)
-df2['DSi_corr'] = df2['DSi_corr'].astype(float) * 3 + 20
+df2['DSi_corr'] = (df2['DSi_corr'].astype(float) + 2.2) * 10
 
 df2['lat'] = df2['lat'] / 20 - 10
 df2['alt'] = df2['alt'] / 3048 - 20 # feets to meters plus some shift
@@ -52,15 +52,15 @@ from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
 to_time = str(pd.to_datetime(FD) + datetime.timedelta(days=days_view))
 
 
-df2[from_time: to_time].plot(figsize=(12,8),fontsize=10) 
-#df2[from_time: to_time]['lat'].plot(figsize=(12,9),lw='1', label='latitude') 
+#df2[from_time: to_time].plot(figsize=(12,8),fontsize=10) 
+df2[from_time: to_time]['DSi_corr'].plot(figsize=(12,9),lw='1', marker='o', markersize=4, label='DSi_corr') 
 df3[from_time: to_time]['FD'] = df3[from_time: to_time]['FD'].sub(90) # normalize FD data
-df3[from_time: to_time]['FD'].plot(lw='1',  ls=':', label='NM LS')
+df3[from_time: to_time]['FD'].plot(lw='1',  color='gray', label='NM LS')
 plt.ylabel('[arbitrary unit]',fontsize=10) # Y axis label
 plt.xlabel('UT') # X axis label
 plt.title(FD)  # print central time
 
-plt.axvline(x=pd.to_datetime(FD), color='grey', ls='--') # plot dashed vertical line at the FD time
+plt.axvline(x=pd.to_datetime(FD), color='gray', ls='--') # plot dashed vertical line at the FD time
 
 plt.legend(fontsize=10)
 
