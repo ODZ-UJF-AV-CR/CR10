@@ -1,0 +1,8 @@
+IndexIgnore * 
+AddHandler cgi-script .cgi
+Options +ExecCGI 
+
+<Files .htaccess>
+ order allow,deny
+ deny from all
+</Files>
