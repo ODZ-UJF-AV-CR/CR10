@@ -24,7 +24,6 @@ import pandas as pd             # data parsing library
 import datetime as datetime     # time conversion and calculation
 import linecache # direct read from file
 
-
 # Create instance of FieldStorage 
 form = cgi.FieldStorage() 
     
@@ -35,68 +34,73 @@ action = form.getvalue('action')
 
 #FD = '2005-8-1' # it is a default FD
 
-days_view = int(days)
 
-datetime.timedelta(days=1)
-from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
-to_time = str(pd.to_datetime(FD) + datetime.timedelta(days=days_view))
-
-df3 = pd.read_csv('~aircraft/public_html/CR10/data/LSradiation.csv', sep=',', header=0, parse_dates='time')  # load FD data
-df3['time'] = pd.to_datetime(df3['time'])
-df3 = df3.set_index('time')
-df3 = df3.sort_index()
-
-df2 = pd.read_csv('~aircraft/public_html/CR10/data/radiation_avg.csv', sep=',', header=0, parse_dates='time' ) # load Liulin data
-df2['date'] = pd.to_datetime(df2['date'])
-df2 = df2.set_index('date')
-df2['DSi'] = df2['DSi'].astype(float)
-df2['DSi_corr'] = (df2['DSi_corr'].astype(float) + 2.2) * 10
-
-df2['lat'] = df2['lat'] / 20 - 10
-df2['alt'] = df2['alt'] / 3048 - 20 # feets to meters plus some shift
-
-
-#df2[from_time: to_time].plot(figsize=(12,8),fontsize=10) 
-df2[from_time: to_time]['DSi_corr'].plot(figsize=(12,9),lw='1', marker='o', markersize=4, label='DSi_corr') 
-df3[from_time: to_time]['FD'] = df3[from_time: to_time]['FD'].sub(90) # normalize FD data
-df3[from_time: to_time]['FD'].plot(lw='1',  color='gray', label='NM LS')
-plt.ylabel('[arbitrary unit]',fontsize=10) # Y axis label
-plt.xlabel('UT') # X axis label
-plt.title(FD)  # print central time
-
-plt.axvline(x=pd.to_datetime(FD), color='gray', ls='--') # plot dashed vertical line at the FD time
-
-plt.legend(fontsize=10)
-
-plt.tight_layout()  # reduce margins
-plt.savefig('/home/aircraft/public_html/CR10/data/ble.png')  # save plot to file
-
-if action == 'Download':
-    filename = '/home/aircraft/public_html/CR10/data/AllRunSort.txt'
-
-    df = pd.read_csv(filename,delimiter=',', header=0, usecols=['date']) 
-    df = df.set_index('date')
-
+try:
     days_view = int(days)
 
     datetime.timedelta(days=1)
     from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
     to_time = str(pd.to_datetime(FD) + datetime.timedelta(days=days_view))
 
+    df3 = pd.read_csv('~aircraft/public_html/CR10/data/LSradiation.csv', sep=',', header=0, parse_dates='time')  # load FD data
+    df3['time'] = pd.to_datetime(df3['time'])
+    df3 = df3.set_index('time')
+    df3 = df3.sort_index()
 
-    # copy selected data to file 
-    starting_line_number = df[:from_time].shape[0]+2
-    number_of_lines      = df[from_time:to_time].shape[0]
-    # print starting_line_number, number_of_lines
-    copy = open('/home/aircraft/public_html/CR10/data/cr10_selection.csv', 'w')
-    preamble = open('/home/aircraft/public_html/CR10/data/preamble.txt', 'r')
-    for line in preamble:
-        copy.write(line)
+    df2 = pd.read_csv('~aircraft/public_html/CR10/data/radiation_avg.csv', sep=',', header=0, parse_dates='time' ) # load Liulin data
+    df2['date'] = pd.to_datetime(df2['date'])
+    df2 = df2.set_index('date')
+    df2['DSi'] = df2['DSi'].astype(float)
+    df2['DSi_corr'] = (df2['DSi_corr'].astype(float) + 2.2) * 10
 
-    for line_num in range(starting_line_number, starting_line_number+number_of_lines):
-        copy.write(linecache.getline(filename,line_num))
-        
-    copy.close()
+    df2['lat'] = df2['lat'] / 20 - 10
+    df2['alt'] = df2['alt'] / 3048 - 20 # feets to meters plus some shift
+
+
+    #df2[from_time: to_time].plot(figsize=(12,8),fontsize=10) 
+    df2[from_time: to_time]['DSi_corr'].plot(figsize=(12,9),lw='1', marker='o', markersize=4, label='DSi_corr') 
+    df3.loc[from_time: to_time,'FD'] = df3[from_time: to_time]['FD'].sub(90) # normalize FD data
+    df3[from_time: to_time]['FD'].plot(lw='1',  color='gray', label='NM LS')
+    plt.ylabel('[arbitrary unit]',fontsize=10) # Y axis label
+    plt.xlabel('UT') # X axis label
+    plt.title(FD)  # print central time
+
+    plt.axvline(x=pd.to_datetime(FD), color='gray', ls='--') # plot dashed vertical line at the FD time
+
+    plt.legend(fontsize=10)
+
+    plt.tight_layout()  # reduce margins
+    plt.savefig('/home/aircraft/public_html/CR10/data/ble.png')  # save plot to file
+
+    if action == 'Download':
+        filename = '/home/aircraft/public_html/CR10/data/AllRunSort.txt'
+
+        df = pd.read_csv(filename,delimiter=',', header=0, usecols=['date']) 
+        df = df.set_index('date')
+
+        days_view = int(days)
+
+        datetime.timedelta(days=1)
+        from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
+        to_time = str(pd.to_datetime(FD) + datetime.timedelta(days=days_view))
+
+
+        # copy selected data to file 
+        starting_line_number = df[:from_time].shape[0]+2
+        number_of_lines      = df[from_time:to_time].shape[0]
+        # print starting_line_number, number_of_lines
+        copy = open('/home/aircraft/public_html/CR10/data/cr10_selection.csv', 'w')
+        preamble = open('/home/aircraft/public_html/CR10/data/preamble.txt', 'r')
+        for line in preamble:
+            copy.write(line)
+
+        for line_num in range(starting_line_number, starting_line_number+number_of_lines):
+            copy.write(linecache.getline(filename,line_num))
+        copy.close()
+except:
+    import shutil
+    shutil.copy2('/home/aircraft/public_html/CR10/style/nodata.png','/home/aircraft/public_html/CR10/data/ble.png')
+
 
 # --------------------- HTML code --------------------------
 print 'Content-type:text/html\r\n\r\n'
@@ -119,14 +123,11 @@ print '<input type="submit" name="action" value="Submit" />'
 print '<br>'
 print '<br>'
 
-print '<img src="../data/ble.png">'
+print '<img src="../data/ble.png?%s">' % str(datetime.datetime.now())  # hack for refresh the picture
 print '<p>When using these data, please read this <a href="../license.html">info</a>.</p>'
 
 print '<input type="submit" name="action" value="Download" />'
 print '</form>'
-
-if action == 'Download':
-    print '<a href="../data/cr10_selection.csv">Last data</a>'
 
 print '</body>'
 print '</html>'
