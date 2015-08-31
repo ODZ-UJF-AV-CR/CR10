@@ -2,8 +2,6 @@
 
 # CT10 measurements WEB access
 
-# TODO copy slice WARNING
-
 '''debug CGI
 print "Content-Type: text/plain"
 print
@@ -11,7 +9,7 @@ import sys
 sys.stderr = sys.stdout
 #'''
 
-activate_this = '/home/aircraft/aircraft/bin/activate_this.py'
+activate_this = '/home/aircraft/aircraft/bin/activate_this.py'  # activate virtualenv
 execfile(activate_this, dict(__file__=activate_this))
 
 # Import modules for CGI handling 
@@ -58,7 +56,7 @@ try:
 
 
     #df2[from_time: to_time].plot(figsize=(12,8),fontsize=10) 
-    df2[from_time: to_time]['DSi_corr'].plot(figsize=(12,9),lw='1', marker='o', markersize=4, label='DSi_corr') 
+    df2[from_time: to_time]['DSi_corr'].plot(figsize=(12,7),lw='1', marker='o', markersize=4, label='DSi_corr') 
     df3.loc[from_time: to_time,'FD'] = df3[from_time: to_time]['FD'].sub(90) # normalize FD data
     df3[from_time: to_time]['FD'].plot(lw='1',  color='gray', label='NM LS')
     plt.ylabel('[arbitrary unit]',fontsize=10) # Y axis label
