@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# CT10 measurements graph generator
+# CT10 measurements WEB access
 
 '''debug CGI
 print "Content-Type: text/plain"
@@ -28,10 +28,15 @@ form = cgi.FieldStorage()
 # Get data from fields
 FD = form.getvalue('FD')
 days = form.getvalue('days')
+action = form.getvalue('action')
 
 #FD = '2005-8-1' # it is a default FD
 
 days_view = int(days)
+
+datetime.timedelta(days=1)
+from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
+to_time = str(pd.to_datetime(FD) + datetime.timedelta(days=days_view))
 
 df3 = pd.read_csv('~aircraft/public_html/CR10/data/LSradiation.csv', sep=',', header=0, parse_dates='time')  # load FD data
 df3['time'] = pd.to_datetime(df3['time'])
@@ -46,10 +51,6 @@ df2['DSi_corr'] = (df2['DSi_corr'].astype(float) + 2.2) * 10
 
 df2['lat'] = df2['lat'] / 20 - 10
 df2['alt'] = df2['alt'] / 3048 - 20 # feets to meters plus some shift
-
-datetime.timedelta(days=1)
-from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
-to_time = str(pd.to_datetime(FD) + datetime.timedelta(days=days_view))
 
 
 #df2[from_time: to_time].plot(figsize=(12,8),fontsize=10) 
@@ -67,7 +68,36 @@ plt.legend(fontsize=10)
 plt.tight_layout()  # reduce margins
 plt.savefig('/home/aircraft/public_html/CR10/data/ble.png')  # save plot to file
 
-# HTML code
+if action == 'Download':
+    filename = '/home/aircraft/public_html/CR10/data/AllRunSort.txt'
+
+    df = pd.read_csv(filename,delimiter=',', header=0, usecols=['date']) 
+    df = df.set_index('date')
+
+    days_view = int(days)
+
+    datetime.timedelta(days=1)
+    from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
+    to_time = str(pd.to_datetime(FD) + datetime.timedelta(days=days_view))
+
+
+    # copy selected data to file 
+    starting_line_number = df[:from_time].shape[0]+2
+    number_of_lines      = df[from_time:to_time].shape[0]
+    print starting_line_number, number_of_lines
+    copy = open('/home/aircraft/public_html/CR10/data/cr10_selection.csv', 'w')
+    preamble = open('/home/aircraft/public_html/CR10/preamble.txt', 'r')
+    line = '# * CR10 data *\n'
+    copy.write(line)
+    for line in preamble:
+        copy.write(line)
+
+    for line_num in range(starting_line_number, starting_line_number+number_of_lines):
+        copy.write(linecache.getline(filename,line_num))
+        
+    copy.close()
+
+# --------------------- HTML code --------------------------
 print 'Content-type:text/html\r\n\r\n'
 print '<html>'
 print '<head>'
@@ -80,12 +110,17 @@ print '<body>'
 print "<h1>CR10 database</h1>"
 print '<form action="cr10.cgi" method="get">'
 print 'Day: <input type="text" name="FD" value=%s>  &nbsp; &nbsp; Window +-: <input type="text" name="days" value=%s /> days &nbsp; &nbsp; ' % (FD, days)
-print '<input type="submit" value="Submit" />'
-print '</form>'
+print '<input type="submit" name="action" value="Submit" />'
+print '<br>'
+print '<br>'
 
 print '<img src="../data/ble.png">'
 print '<p>When using these data, please read this <a href="../license.html">info</a>.</p>'
 
+print '<input type="submit" name="action" value="Download" />'
+print '</form>
+if action == 'Download':
+print '<a href="../data/CR10_selection.csv">Start automatic download!</a>'
 print '</body>'
 print '</html>'
 
