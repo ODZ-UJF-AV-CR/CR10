@@ -2,6 +2,8 @@
 
 # CT10 measurements WEB access
 
+# TODO copy slice WARNING
+
 '''debug CGI
 print "Content-Type: text/plain"
 print
@@ -18,13 +20,14 @@ import cgi, cgitb
 import matplotlib               
 matplotlib.use('Agg')           # virtual frame buffer
 import matplotlib.pyplot as plt # plotting library
-#import pylab
 import pandas as pd             # data parsing library
 import datetime as datetime     # time conversion and calculation
+import linecache # direct read from file
+
 
 # Create instance of FieldStorage 
 form = cgi.FieldStorage() 
-
+    
 # Get data from fields
 FD = form.getvalue('FD')
 days = form.getvalue('days')
@@ -84,11 +87,9 @@ if action == 'Download':
     # copy selected data to file 
     starting_line_number = df[:from_time].shape[0]+2
     number_of_lines      = df[from_time:to_time].shape[0]
-    print starting_line_number, number_of_lines
+    # print starting_line_number, number_of_lines
     copy = open('/home/aircraft/public_html/CR10/data/cr10_selection.csv', 'w')
-    preamble = open('/home/aircraft/public_html/CR10/preamble.txt', 'r')
-    line = '# * CR10 data *\n'
-    copy.write(line)
+    preamble = open('/home/aircraft/public_html/CR10/data/preamble.txt', 'r')
     for line in preamble:
         copy.write(line)
 
@@ -104,6 +105,10 @@ print '<head>'
 print '<title>CR10</title>'
 print '<link rel="stylesheet" type="text/css" href="../style/aircraft.css">'
 print '<link rel="shortcut icon" type="image/x-icon" href="../style/favicon.ico" />'
+
+if action == 'Download':
+    print '<meta http-equiv="refresh" content="0; url=http://bobr.ujf.cas.cz/~aircraft/CR10/data/cr10_selection.csv?forcedownload=1"/>'
+
 print '</head>'
 print '<body>'
 
@@ -118,9 +123,11 @@ print '<img src="../data/ble.png">'
 print '<p>When using these data, please read this <a href="../license.html">info</a>.</p>'
 
 print '<input type="submit" name="action" value="Download" />'
-print '</form>
+print '</form>'
+
 if action == 'Download':
-print '<a href="../data/CR10_selection.csv">Start automatic download!</a>'
+    print '<a href="../data/cr10_selection.csv">Last data</a>'
+
 print '</body>'
 print '</html>'
 
