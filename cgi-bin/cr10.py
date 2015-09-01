@@ -56,9 +56,9 @@ try:
 
 
     #df2[from_time: to_time].plot(figsize=(12,8),fontsize=10) 
-    df2[from_time: to_time]['DSi_corr'].plot(figsize=(12,7),lw='1', marker='o', markersize=4, label='DSi_corr') 
+    df2[from_time: to_time]['DSi_corr'].plot(figsize=(12,7),lw='1', marker='o', markersize=4, label='DSi_corr',zorder=2) 
     df3.loc[from_time: to_time,'FD'] = df3[from_time: to_time]['FD'].sub(90) # normalize FD data
-    df3[from_time: to_time]['FD'].plot(lw='1',  color='gray', label='NM LS')
+    df3[from_time: to_time]['FD'].plot(lw='1',  color='gray', label='NM LS', zorder=1)
     plt.ylabel('[arbitrary unit]',fontsize=10) # Y axis label
     plt.xlabel('UT') # X axis label
     plt.title(FD)  # print central time
