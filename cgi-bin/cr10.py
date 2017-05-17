@@ -9,8 +9,8 @@ import sys
 sys.stderr = sys.stdout
 #'''
 
-activate_this = '/home/aircraft/aircraft/bin/activate_this.py'  # activate virtualenv
-execfile(activate_this, dict(__file__=activate_this))
+#!!!activate_this = '/home/aircraft/aircraft/bin/activate_this.py'  # activate virtualenv
+#!!!execfile(activate_this, dict(__file__=activate_this))
 
 # Import modules for CGI handling 
 import cgi, cgitb 
@@ -40,12 +40,12 @@ try:
     from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
     to_time = str(pd.to_datetime(FD) + datetime.timedelta(days=days_view))
 
-    df3 = pd.read_csv('~aircraft/public_html/CR10/data/LSradiation.csv', sep=',', header=0, parse_dates='time')  # load FD data
+    df3 = pd.read_csv('~aircraft/public_html/data/LSradiation.csv', sep=',', header=0, parse_dates='time')  # load FD data
     df3['time'] = pd.to_datetime(df3['time'])
     df3 = df3.set_index('time')
     df3 = df3.sort_index()
 
-    df2 = pd.read_csv('~aircraft/public_html/CR10/data/radiation_avg.csv', sep=',', header=0, parse_dates='time' ) # load Liulin data
+    df2 = pd.read_csv('~aircraft/public_html/data/radiation_avg.csv', sep=',', header=0, parse_dates='time' ) # load Liulin data
     df2['date'] = pd.to_datetime(df2['date'])
     df2 = df2.set_index('date')
     df2['DSi'] = df2['DSi'].astype(float)
@@ -68,10 +68,10 @@ try:
     plt.legend(fontsize=10)
 
     plt.tight_layout()  # reduce margins
-    plt.savefig('/home/aircraft/public_html/CR10/data/ble.png')  # save plot to file
+    plt.savefig('/home/aircraft/public_html/data/ble.png')  # save plot to file
 
     if action == 'Download':
-        filename = '/home/aircraft/public_html/CR10/data/AllRunSort.txt'
+        filename = '/home/aircraft/public_html/data/AllRunSort.txt'
 
         df = pd.read_csv(filename,delimiter=',', header=0, usecols=['date']) 
         df = df.set_index('date')
@@ -87,8 +87,8 @@ try:
         starting_line_number = df[:from_time].shape[0]+2
         number_of_lines      = df[from_time:to_time].shape[0]
         # print starting_line_number, number_of_lines
-        copy = open('/home/aircraft/public_html/CR10/data/cr10_selection.csv', 'w')
-        preamble = open('/home/aircraft/public_html/CR10/data/preamble.txt', 'r')
+        copy = open('/home/aircraft/public_html/data/cr10_selection.csv', 'w')
+        preamble = open('/home/aircraft/public_html/data/preamble.txt', 'r')
         for line in preamble:
             copy.write(line)
 
@@ -97,7 +97,7 @@ try:
         copy.close()
 except:
     import shutil
-    shutil.copy2('/home/aircraft/public_html/CR10/style/nodata.png','/home/aircraft/public_html/CR10/data/ble.png')
+    shutil.copy2('/home/aircraft/public_html/style/nodata.png','/home/aircraft/public_html/CR10/data/ble.png')
 
 
 # --------------------- HTML code --------------------------
@@ -109,7 +109,7 @@ print '<link rel="stylesheet" type="text/css" href="../style/aircraft.css">'
 print '<link rel="shortcut icon" type="image/x-icon" href="../style/favicon.ico" />'
 
 if action == 'Download':
-    print '<meta http-equiv="refresh" content="0; url=http://bobr.ujf.cas.cz/~aircraft/CR10/data/cr10_selection.csv?forcedownload=1"/>'
+    print '<meta http-equiv="refresh" content="0; url=http://cr10.odz.ujf.cas.cz/data/cr10_selection.csv?forcedownload=1"/>'
 
 print '</head>'
 print '<body>'

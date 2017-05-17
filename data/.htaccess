@@ -1,0 +1,3 @@
+<FilesMatch "\.(?i:csv)$">
+  ForceType application/octet-stream
+</FilesMatch>
