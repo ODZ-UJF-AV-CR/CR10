@@ -97,7 +97,8 @@ try:
         copy.close()
 except:
     import shutil
-    shutil.copy2('/home/aircraft/public_html/style/nodata.png','/home/aircraft/public_html/CR10/data/ble.png')
+    shutil.copy2('/home/aircraft/public_html/style/nodata.png','/home/aircraft/public_html/data/ble.png')
+    pass
 
 
 # --------------------- HTML code --------------------------
