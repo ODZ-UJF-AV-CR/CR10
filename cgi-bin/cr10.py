@@ -33,7 +33,7 @@ action = form.getvalue('action')
 #FD = '2005-8-1' # it is a default FD
 
 try:
-    days_view = 20#int(days)
+    days_view = int(days)
 
     datetime.timedelta(days=1)
     from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
