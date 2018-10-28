@@ -32,7 +32,6 @@ action = form.getvalue('action')
 
 #FD = '2005-8-1' # it is a default FD
 
-
 try:
     days_view = int(days)
 
@@ -96,6 +95,7 @@ try:
             copy.write(linecache.getline(filename,line_num))
         copy.close()
 except:
+    #raise # for debugg purposes
     import shutil
     shutil.copy2('/home/aircraft/public_html/style/nodata.png','/home/aircraft/public_html/data/ble.png')
     pass
