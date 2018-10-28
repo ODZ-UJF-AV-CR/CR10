@@ -33,7 +33,7 @@ action = form.getvalue('action')
 #FD = '2005-8-1' # it is a default FD
 
 try:
-    days_view = int(days)
+    days_view = 20#int(days)
 
     datetime.timedelta(days=1)
     from_time = str(pd.to_datetime(FD) + datetime.timedelta(days=-days_view))
@@ -70,7 +70,7 @@ try:
     plt.savefig('/home/aircraft/public_html/data/ble.png')  # save plot to file
 
     if action == 'Download':
-        filename = '/home/aircraft/public_html/data/AllRunSort.txt'
+        filename = '/home/aircraft/public_html/data/AllRunSort.csv'
 
         df = pd.read_csv(filename,delimiter=',', header=0, usecols=['date']) 
         df = df.set_index('date')
