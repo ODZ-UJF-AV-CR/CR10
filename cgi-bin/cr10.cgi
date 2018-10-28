@@ -1,1 +1,0 @@
-/home/aircraft/public_html/cgi-bin/cr10.py

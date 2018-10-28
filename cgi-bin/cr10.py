@@ -48,18 +48,18 @@ try:
     df2 = pd.read_csv('~aircraft/public_html/data/radiation_avg.csv', sep=',', header=0, parse_dates='time' ) # load Liulin data
     df2['date'] = pd.to_datetime(df2['date'])
     df2 = df2.set_index('date')
-    df2['DSi'] = df2['DSi'].astype(float)
-    df2['DSi_corr'] = (df2['DSi_corr'].astype(float) + 2.2) * 10
+    df2['c'] = df2['count'] / (3.1/100) # Normalize to %
+    df2 = df2.loc[df2['c']<110]
 
-    df2['lat'] = df2['lat'] / 20 - 10
-    df2['alt'] = df2['alt'] / 3048 - 20 # feets to meters plus some shift
+    #df2['lat'] = df2['lat'] / 20 - 10
+    #df2['alt'] = df2['alt'] / 3048 - 20 # feets to meters plus some shift
 
 
     #df2[from_time: to_time].plot(figsize=(12,8),fontsize=10) 
-    df2[from_time: to_time]['DSi_corr'].plot(figsize=(12,7),lw='1', marker='o', markersize=4, label='DSi_corr',zorder=2) 
-    df3.loc[from_time: to_time,'FD'] = df3[from_time: to_time]['FD'].sub(90) # normalize FD data
-    df3[from_time: to_time]['FD'].plot(lw='1',  color='gray', label='NM LS', zorder=1)
-    plt.ylabel('[arbitrary unit]',fontsize=10) # Y axis label
+    df2[from_time: to_time]['c'].plot(figsize=(12,7),lw='1', marker='o', markersize=4, label='Aircraft',zorder=2) 
+    #df3.loc[from_time: to_time,'FD'] = df3[from_time: to_time]['FD'].sub(90) # normalize FD data
+    df3[from_time: to_time]['FD'].plot(lw='1',  color='gray', label='Ground', zorder=1)
+    plt.ylabel('[%]',fontsize=10) # Y axis label
     plt.xlabel('UT') # X axis label
     plt.title(FD)  # print central time
 
