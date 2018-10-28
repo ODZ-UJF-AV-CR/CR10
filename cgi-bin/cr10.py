@@ -50,19 +50,14 @@ try:
     df2['c'] = df2['count'] / (3.1/100) # Normalize to %
     df2 = df2.loc[df2['c']<110]
 
-    #df2['lat'] = df2['lat'] / 20 - 10
-    #df2['alt'] = df2['alt'] / 3048 - 20 # feets to meters plus some shift
 
-
-    #df2[from_time: to_time].plot(figsize=(12,8),fontsize=10) 
-    df2[from_time: to_time]['c'].plot(figsize=(12,7),lw='1', marker='o', markersize=4, label='Aircraft',zorder=2) 
-    #df3.loc[from_time: to_time,'FD'] = df3[from_time: to_time]['FD'].sub(90) # normalize FD data
+    df2[from_time: to_time]['c'].plot(figsize=(12,7),lw='1', marker='o', linestyle=':', markersize=4, label='Aircraft',zorder=2) 
     df3[from_time: to_time]['FD'].plot(lw='1',  color='gray', label='Ground', zorder=1)
     plt.ylabel('[%]',fontsize=10) # Y axis label
     plt.xlabel('UT') # X axis label
     plt.title(FD)  # print central time
 
-    plt.axvline(x=pd.to_datetime(FD), color='gray', ls='--') # plot dashed vertical line at the FD time
+    plt.axvline(x=pd.to_datetime(FD), color='purple', ls='--') # plot dashed vertical line at the FD time
 
     plt.legend(fontsize=10)
 
